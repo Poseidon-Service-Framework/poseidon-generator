@@ -6,6 +6,7 @@
     <groupId>com.muggle</groupId>
     <artifactId>poseidon-generator</artifactId>
     <version>1.0.4-release</version>
+    <packaging>jar</packaging>
     <name>poseidon generator</name>
     <description> 逆向工程</description>
 
