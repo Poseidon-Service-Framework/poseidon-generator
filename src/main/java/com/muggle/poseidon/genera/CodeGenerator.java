@@ -18,6 +18,8 @@ public abstract class CodeGenerator {
 
     private  ProjectMessage message;
 
+    private FreemarkerTemplateEngine freemarkerTemplateEngine;
+
     public void init(ProjectMessage projectMessage){
         this.message=projectMessage;
     }
@@ -96,10 +98,18 @@ public abstract class CodeGenerator {
         mpg.setTemplate(templateConfig);
         StrategyConfig strategyConfig = configStrategy(message);
         mpg.setStrategy(strategyConfig);
-        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
+        FreemarkerTemplateEngine freemarkerTemplateEngine = new FreemarkerTemplateEngine();
+        this.freemarkerTemplateEngine=freemarkerTemplateEngine;
+        mpg.setTemplateEngine(freemarkerTemplateEngine);
         mpg.execute();
-
     }
 
 
+    public FreemarkerTemplateEngine getFreemarkerTemplateEngine() {
+        return freemarkerTemplateEngine;
+    }
+
+    public void setFreemarkerTemplateEngine(FreemarkerTemplateEngine freemarkerTemplateEngine) {
+        this.freemarkerTemplateEngine = freemarkerTemplateEngine;
+    }
 }

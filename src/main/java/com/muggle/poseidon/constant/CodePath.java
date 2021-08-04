@@ -6,9 +6,9 @@ package com.muggle.poseidon.constant;
  * Created by muggle
  */
 public interface CodePath {
-    String MAIN_CLASS="mainClass.java.ftl";
+    String MAIN_CLASS="/psf-template/mainClass.java.ftl";
     String BANNER="/banner.txt";
-    String README="/readme.md.ftl";
-    String POM="/pom.xml.ftl";
-    String APPLICATION=".properties.ftl";
+    String POM="/psf-template/pom.xml.ftl";
+    String APPLICATION="/psf-template/#.properties.ftl";
+    String LOGBACK="/psf-template/logback.xml.ftl";
 }

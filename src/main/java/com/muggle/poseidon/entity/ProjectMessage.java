@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class ProjectMessage {
 
-    public ProjectMessage() {
+    private ProjectMessage() {
 
     }
 

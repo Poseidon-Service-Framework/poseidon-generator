@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) throws IOException, TemplateException {
+    public static void main(String[] args) throws Exception {
         Map<String, String> otherfield=new HashMap<>();
         otherfield.put("parentVersion","1.0-SNAPSHOT");
         ProjectMessage build = ProjectMessage.builder().author("muggle").driver("com.mysql.jdbc.Driver").username("root")

@@ -1,5 +1,8 @@
 package com.muggle.poseidon.factory;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.muggle.poseidon.constant.GlobalConstant;
 import com.muggle.poseidon.entity.ProjectMessage;
 import com.muggle.poseidon.genera.CodeGenerator;
@@ -16,9 +19,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.util.*;
 
 import static com.muggle.poseidon.constant.CodePath.*;
 import static com.muggle.poseidon.constant.GlobalConstant.*;
@@ -48,13 +50,7 @@ public class CodeFactory {
         LOGGER.info("生成生成 业务类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
     }
 
-    public static void createMainClass(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath.concat(GlobalConstant.SEPARATION).concat(MAIN_CLASS));
-        if (!file.exists()) {
-            throw new IllegalStateException("未找到文件 mainClass.java.ftl");
-        }
-        cfg.setDirectoryForTemplateLoading(new File(filePath));
-        Template template = cfg.getTemplate(MAIN_CLASS);
+    public static void createMainClass( ProjectMessage projectMessage) throws Exception {
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(GlobalConstant.SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
@@ -64,41 +60,46 @@ public class CodeFactory {
         path.append(projectMessage.getProjectPackage().replace(".", "/")).append("/");
         String module = projectMessage.getModule();
         String className = underline2Camel(module, true);
-
         path.append(className).append("Application").append(".java");
-        File mainClass = new File(path.toString());
-        if (!mainClass.getParentFile().exists()) {
-            mainClass.getParentFile().mkdirs();
-        }
-        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(mainClass)));
-        HashMap<String, String> model = new HashMap<>();
+        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
         projectMessage.getOtherField().put("className", className.concat("Application"));
-        template.process(projectMessage, out);
-        LOGGER.info("生成mainclass》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
+        freemarkerTemplateEngine.writer(converMessage(projectMessage),MAIN_CLASS,path.toString());
     }
 
-    public static void createConfig(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
+    private static Map<String, Object> converMessage(ProjectMessage projectMessage) throws IllegalAccessException {
+        Map<String, Object> map = new HashMap<>();
+        Class<?> clazz = projectMessage.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            field.setAccessible(true);
+            String fieldName = field.getName();
+            Object value = field.get(projectMessage);
+            map.put(fieldName, value);
+        }
+        return map;
+    }
+
+    public static void createConfig(ProjectMessage projectMessage) throws Exception {
+        String filePath = CodeGenerator.class.getClassLoader().getResource(GlobalConstant.OTHER).getFile();
         List<String> allFile = getAllFile(filePath, false);
-        cfg.setDirectoryForTemplateLoading(new File(filePath));
         for (String templatePath : allFile) {
             StringBuilder classPath = new StringBuilder();
             classPath.append(System.getProperty(USER_DIR)).append(SEPARATION);
             if (!StringUtils.isEmpty(projectMessage.getModule())) {
                 classPath.append(projectMessage.getModule());
             }
-            String tempSubPath = templatePath.substring(templatePath.indexOf("/psf-others/") + "/psf-others/".length()).replace(FM_PERFIX, "");
+            String javaFileName = templatePath.substring(templatePath.indexOf("/psf-others/") + "/psf-others/".length()).replace(FM_PERFIX, "");
             classPath.append(MAVEN_SRC_FILE.concat(SEPARATION)).append(projectMessage.getProjectPackage().replace(".", SEPARATION))
-                    .append(SEPARATION).append(tempSubPath);
-            Template template = cfg.getTemplate(tempSubPath + ".ftl");
+                    .append(SEPARATION).append(javaFileName);
             File classFile = new File(classPath.toString());
             if (!classFile.getParentFile().exists()) {
                 classFile.getParentFile().mkdirs();
             }
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(classPath.toString()))));
-            String packageName = projectMessage.getProjectPackage().concat(".").concat(tempSubPath.substring(0, tempSubPath
+            FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
+            String packageName = projectMessage.getProjectPackage().concat(".").concat(javaFileName.substring(0, javaFileName
                     .lastIndexOf('/')).replace("/", "."));
             projectMessage.getOtherField().put("packageName", packageName);
-            template.process(projectMessage, out);
+            freemarkerTemplateEngine.writer(converMessage(projectMessage),"/psf-others/".concat(javaFileName)
+                    .concat(FM_PERFIX),classPath.toString());
             LOGGER.info("生成config类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         }
 
@@ -110,30 +111,31 @@ public class CodeFactory {
             if (!banner.getParentFile().exists()) {
                 banner.getParentFile().mkdirs();
             }
-            FileOutputStream fileOutputStream = new FileOutputStream(banner);
-            String logo = "                                                                                 /$$       /$$\n" +
-                    "                                                                                |__/      | $$\n" +
-                    "                                          /$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$  /$$  /$$$$$$$  /$$$$$$  /$$$$$$$\n" +
-                    "                                         /$$__  $$ /$$__  $$ /$$_____/ /$$__  $$| $$ /$$__  $$ /$$__  $$| $$__  $$\n" +
-                    "                                        | $$  \\ $$| $$  \\ $$|  $$$$$$ | $$$$$$$$| $$| $$  | $$| $$  \\ $$| $$  \\ $$\n" +
-                    "                                        | $$  | $$| $$  | $$ \\____  $$| $$_____/| $$| $$  | $$| $$  | $$| $$  | $$\n" +
-                    "                                        | $$$$$$$/|  $$$$$$/ /$$$$$$$/|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$  | $$\n" +
-                    "                                        | $$____/  \\______/ |_______/  \\_______/|__/ \\_______/ \\______/ |__/  |__/\n" +
-                    "                                        | $$\n" +
-                    "                                        | $$\n" +
-                    "                                        |__/";
-            fileOutputStream.write(logo.getBytes());
-            LOGGER.info("生成banner》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
+            try (FileOutputStream fileOutputStream = new FileOutputStream(banner);){
+                String logo = "                                                                                 /$$       /$$\n" +
+                        "                                                                                |__/      | $$\n" +
+                        "                                          /$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$  /$$  /$$$$$$$  /$$$$$$  /$$$$$$$\n" +
+                        "                                         /$$__  $$ /$$__  $$ /$$_____/ /$$__  $$| $$ /$$__  $$ /$$__  $$| $$__  $$\n" +
+                        "                                        | $$  \\ $$| $$  \\ $$|  $$$$$$ | $$$$$$$$| $$| $$  | $$| $$  \\ $$| $$  \\ $$\n" +
+                        "                                        | $$  | $$| $$  | $$ \\____  $$| $$_____/| $$| $$  | $$| $$  | $$| $$  | $$\n" +
+                        "                                        | $$$$$$$/|  $$$$$$/ /$$$$$$$/|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$  | $$\n" +
+                        "                                        | $$____/  \\______/ |_______/  \\_______/|__/ \\_______/ \\______/ |__/  |__/\n" +
+                        "                                        | $$\n" +
+                        "                                        | $$\n" +
+                        "                                        |__/";
+                fileOutputStream.write(logo.getBytes());
+                LOGGER.info("生成banner》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
+            }
         }
     }
 
-    public static void createReadme(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath.concat(README));
-        if (!file.exists()) {
-            File readme = new File(System.getProperty(USER_DIR) + SEPARATION + projectMessage.getModule() + "/readme.md");
-            if (!readme.exists()) {
-                // 写标志
-                FileOutputStream fileOutputStream = new FileOutputStream(readme);
+    public static void createReadme(ProjectMessage projectMessage) throws IOException {
+        File readme = new File(System.getProperty(USER_DIR) + SEPARATION + projectMessage.getModule() + "/readme.md");
+        if (!readme.exists()) {
+            if (!readme.getParentFile().exists()) {
+                readme.getParentFile().mkdirs();
+            }
+            try (FileOutputStream fileOutputStream = new FileOutputStream(readme)) {
                 String logo = "# 项目介绍\n" +
                         "\n" +
                         "# 概要设计\n" +
@@ -144,81 +146,42 @@ public class CodeFactory {
                         "\n";
                 fileOutputStream.write(logo.getBytes());
             }
-        } else {
-            Template template = cfg.getTemplate("readme.md.ftl");
-            StringBuilder path = new StringBuilder();
-            path.append(System.getProperty(USER_DIR)).append(SEPARATION);
-            if (!StringUtils.isEmpty(projectMessage.getModule())) {
-                path.append(projectMessage.getModule()).append(SEPARATION);
-            }
-            path.append("readme.md");
-            Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
-            template.process(projectMessage, out);
-            LOGGER.info("生成 readme.md》》》》》》》》》》》》》》》》》");
         }
     }
 
-    public static void createPom(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath.concat(POM));
-        cfg.setDirectoryForTemplateLoading(new File(filePath));
-        if (!file.exists()) {
-            throw new IllegalStateException("未找到文件 pom.xml.ftl");
-        }
-        Template template = cfg.getTemplate("pom.xml.ftl");
+    public static void createPom( ProjectMessage projectMessage) throws Exception {
+        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(SEPARATION);
         }
         path.append("pom.xml");
-        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
-        template.process(projectMessage, out);
+        freemarkerTemplateEngine.writer(converMessage(projectMessage),POM,path.toString());
         LOGGER.info("生成pom文件》》》》》》》》》》》》");
     }
 
-    public static void createProperties(String properties,Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath.concat(SEPARATION).concat(properties).concat(APPLICATION));
-        cfg.setDirectoryForTemplateLoading(new File(filePath));
-        if (!file.exists()) {
-            File propertiesFile = new File(System.getProperty(USER_DIR).concat(SEPARATION).concat(projectMessage.getModule())
-                    .concat(MAVEN_RESOURECES_FILE).concat(SEPARATION).concat(properties).concat(".properties"));
-            if (!propertiesFile.exists()){
-                propertiesFile.createNewFile();
-            }
-            return;
-        }
-        Template template = cfg.getTemplate(properties.concat(".properties.ftl"));
+    public static void createProperties(String properties, ProjectMessage projectMessage) throws Exception {
+        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(SEPARATION);
         }
         path.append(MAVEN_RESOURECES_FILE).append(SEPARATION).append(properties).append(".properties");
-        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
-        template.process(projectMessage, out);
+        freemarkerTemplateEngine.writer(converMessage(projectMessage),APPLICATION.replace("#",properties),path.toString());
         LOGGER.info("生成 properties 》》》》》》》》》》》》");
     }
 
-    public static void createLogback(Configuration cfg, String filePath, ProjectMessage projectMessage) throws IOException, TemplateException {
-        File file = new File(filePath.concat(SEPARATION).concat("logback.xml.ftl"));
-        cfg.setDirectoryForTemplateLoading(new File(filePath));
-        if (!file.exists()) {
-            File propertiesFile = new File(System.getProperty(USER_DIR).concat(SEPARATION).concat(projectMessage.getModule())
-                    .concat(MAVEN_RESOURECES_FILE).concat(SEPARATION).concat("logback.xml"));
-            if (!propertiesFile.exists()){
-                propertiesFile.createNewFile();
-            }
-            return;
-        }
-        Template template = cfg.getTemplate("logback.xml.ftl");
+    public static void createLogback( ProjectMessage projectMessage) throws Exception {
+        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(SEPARATION);
         }
         path.append(MAVEN_RESOURECES_FILE).append(SEPARATION).append("logback.xml");
-        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(path.toString()))));
-        template.process(projectMessage, out);
+        freemarkerTemplateEngine.writer(converMessage(projectMessage),LOGBACK,path.toString());
         LOGGER.info("生成 logback.xml 》》》》》》》》》》》》");
     }
 
