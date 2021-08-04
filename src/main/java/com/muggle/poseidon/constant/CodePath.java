@@ -1,4 +1,4 @@
-package com.muggle.psf.constant;
+package com.muggle.poseidon.constant;
 
 /**
  * Description

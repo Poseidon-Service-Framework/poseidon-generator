@@ -1,8 +1,8 @@
-package com.muggle.psf;
+package com.muggle.poseidon;
 
-import com.muggle.psf.entity.ProjectMessage;
-import com.muggle.psf.factory.PoseidonCodeFactory;
-import com.muggle.psf.genera.SimpleCodeGenerator;
+import com.muggle.poseidon.entity.ProjectMessage;
+import com.muggle.poseidon.factory.PoseidonCodeFactory;
+import com.muggle.poseidon.genera.SimpleCodeGenerator;
 import freemarker.template.TemplateException;
 
 import java.io.IOException;

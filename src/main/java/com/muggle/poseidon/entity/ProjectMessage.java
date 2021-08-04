@@ -1,4 +1,4 @@
-package com.muggle.psf.entity;
+package com.muggle.poseidon.entity;
 
 import org.apache.commons.lang3.StringUtils;
 

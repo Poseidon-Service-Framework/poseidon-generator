@@ -1,21 +1,17 @@
-package com.muggle.psf.genera;
+package com.muggle.poseidon.genera;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-import com.muggle.psf.factory.PoseidonCodeFactory;
-import com.muggle.psf.constant.GlobalConstant;
-import com.muggle.psf.entity.ProjectMessage;
+import com.muggle.poseidon.constant.GlobalConstant;
+import com.muggle.poseidon.entity.ProjectMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @program: poseidon-generator

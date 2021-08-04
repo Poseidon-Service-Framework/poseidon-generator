@@ -1,10 +1,9 @@
-package com.muggle.psf.factory;
+package com.muggle.poseidon.factory;
 
-import com.muggle.psf.constant.GlobalConstant;
-import com.muggle.psf.entity.ProjectMessage;
-import com.muggle.psf.genera.CodeGenerator;
+import com.muggle.poseidon.constant.GlobalConstant;
+import com.muggle.poseidon.entity.ProjectMessage;
+import com.muggle.poseidon.genera.CodeGenerator;
 import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
@@ -21,8 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.muggle.psf.constant.CodePath.*;
-import static com.muggle.psf.constant.GlobalConstant.*;
+import static com.muggle.poseidon.constant.CodePath.*;
+import static com.muggle.poseidon.constant.GlobalConstant.*;
 
 /**
  * Description
