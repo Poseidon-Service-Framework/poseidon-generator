@@ -1,0 +1,1 @@
+cd .. && mvn deploy --settings ..\doc\settings-al.xml && mvn install
