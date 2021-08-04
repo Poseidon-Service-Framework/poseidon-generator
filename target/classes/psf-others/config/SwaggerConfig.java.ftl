@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 /**
 * @program: poseidon-cloud-user
 * @description: 接口文档配置
-* @author: muggle
+* @author: auto
 * @create: 2019-12-06
 **/
 
