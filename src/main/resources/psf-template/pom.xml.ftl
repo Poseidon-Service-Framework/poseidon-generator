@@ -126,7 +126,7 @@
                 <dependency>
                     <groupId>com.muggle</groupId>
                     <artifactId>poseidon-generator</artifactId>
-                    <version>1.0.0-beta</version>
+                    <version>1.0.1-beta</version>
                 </dependency>
             </dependencies>
         </profile>

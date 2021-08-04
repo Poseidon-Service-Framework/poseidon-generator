@@ -1,26 +1,21 @@
 package com.muggle.poseidon.factory;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.muggle.poseidon.constant.GlobalConstant;
 import com.muggle.poseidon.entity.ProjectMessage;
 import com.muggle.poseidon.genera.CodeGenerator;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.muggle.poseidon.constant.CodePath.*;
 import static com.muggle.poseidon.constant.GlobalConstant.*;
