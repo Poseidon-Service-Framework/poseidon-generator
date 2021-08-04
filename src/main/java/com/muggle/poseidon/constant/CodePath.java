@@ -10,5 +10,5 @@ public interface CodePath {
     String BANNER="/banner.txt";
     String POM="/psf-template/pom.xml.ftl";
     String APPLICATION="/psf-template/#.properties.ftl";
-    String LOGBACK="/psf-template/logback.xml.ftl";
+    String LOGBACK= "/psf-template/logback-spring.xml.ftl";
 }

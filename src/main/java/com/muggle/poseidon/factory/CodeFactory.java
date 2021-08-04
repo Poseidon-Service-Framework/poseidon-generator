@@ -175,7 +175,7 @@ public class CodeFactory {
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(SEPARATION);
         }
-        path.append(MAVEN_RESOURECES_FILE).append(SEPARATION).append("logback.xml");
+        path.append(MAVEN_RESOURECES_FILE).append(SEPARATION).append("logback-spring.xml");
         freemarkerTemplateEngine.writer(converMessage(projectMessage),LOGBACK,path.toString());
         LOGGER.info("生成 logback.xml 》》》》》》》》》》》》");
     }

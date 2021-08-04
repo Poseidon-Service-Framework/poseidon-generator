@@ -37,7 +37,7 @@ spring.datasource.filters=stat,slf4j
 spring.datasource.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
 
 
-logging.config=classpath:logback.xml
+logging.config=classpath:logback-spring.xml
 poseidon.static-path=/**/*.*
 log.dir=logs
 
