@@ -2,7 +2,6 @@ package ${projectPackage};
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
 * @author muggle
@@ -11,7 +10,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 */
 
 @SpringBootApplication
-@EnableDiscoveryClient
+@ServletComponentScan
+@EnableAsync
+@EnableScheduling
 public class ${otherField.className} {
     public static void main(String[] args) {
         SpringApplication.run(${otherField.className}.class, args);
