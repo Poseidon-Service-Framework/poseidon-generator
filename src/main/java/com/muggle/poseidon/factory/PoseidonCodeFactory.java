@@ -3,13 +3,8 @@ package com.muggle.poseidon.factory;
 import com.muggle.poseidon.constant.GlobalConstant;
 import com.muggle.poseidon.entity.ProjectMessage;
 import com.muggle.poseidon.genera.CodeGenerator;
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 /**
  * Description
@@ -24,8 +19,6 @@ public class PoseidonCodeFactory extends CodeFactory {
             LOGGER.info("skipJdbc== false》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
             createCode(projectMessage);
         }
-        Configuration cfg = new Configuration(Configuration.VERSION_2_3_28);
-        cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_28));
         if (!(Boolean.getBoolean("skipBase") || projectMessage.isSkipBase())) {
             LOGGER.info("skipBase== false》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
             createBanner(projectMessage);

@@ -3,9 +3,6 @@ package com.muggle.poseidon;
 import com.muggle.poseidon.entity.ProjectMessage;
 import com.muggle.poseidon.factory.PoseidonCodeFactory;
 import com.muggle.poseidon.genera.SimpleCodeGenerator;
-import freemarker.template.TemplateException;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
