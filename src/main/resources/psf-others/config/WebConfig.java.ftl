@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Configuration
-public class PoseidonWebConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void configureMessageConverters(List${"<"}HttpMessageConverter${"<"}?${">"}${">"} converters) {
