@@ -1,8 +1,6 @@
 package com.muggle.poseidon.factory;
 
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.muggle.poseidon.constant.GlobalConstant;
 import com.muggle.poseidon.entity.ProjectMessage;
 import com.muggle.poseidon.genera.CodeGenerator;
@@ -14,13 +12,27 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.JarURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
-import static com.muggle.poseidon.constant.CodePath.*;
-import static com.muggle.poseidon.constant.GlobalConstant.*;
+import static com.muggle.poseidon.constant.CodePath.APPLICATION;
+import static com.muggle.poseidon.constant.CodePath.BANNER;
+import static com.muggle.poseidon.constant.CodePath.LOGBACK;
+import static com.muggle.poseidon.constant.CodePath.MAIN_CLASS;
+import static com.muggle.poseidon.constant.CodePath.POM;
+import static com.muggle.poseidon.constant.GlobalConstant.FM_PERFIX;
+import static com.muggle.poseidon.constant.GlobalConstant.MAVEN_RESOURECES_FILE;
+import static com.muggle.poseidon.constant.GlobalConstant.MAVEN_SRC_FILE;
+import static com.muggle.poseidon.constant.GlobalConstant.OTHER;
+import static com.muggle.poseidon.constant.GlobalConstant.SEPARATION;
+import static com.muggle.poseidon.constant.GlobalConstant.USER_DIR;
 
 /**
  * Description
@@ -84,15 +96,15 @@ public class CodeFactory {
 
     public static void createConfig() throws Exception {
         ProjectMessage projectMessage = codeGenerator.getMessage();
-        String filePath = CodeGenerator.class.getClassLoader().getResource(GlobalConstant.OTHER).getFile();
-        List<String> allFile = getAllFile(filePath, false);
+        URL resource = CodeGenerator.class.getClassLoader().getResource(OTHER);
+        List<String> allFile = getAllFile(resource);
         for (String templatePath : allFile) {
             StringBuilder classPath = new StringBuilder();
             classPath.append(System.getProperty(USER_DIR)).append(SEPARATION);
             if (!StringUtils.isEmpty(projectMessage.getModule())) {
                 classPath.append(projectMessage.getModule());
             }
-            String javaFileName = templatePath.substring(templatePath.indexOf("/psf-others/") + "/psf-others/".length()).replace(FM_PERFIX, "");
+            String javaFileName = templatePath.replace(FM_PERFIX, "");
             classPath.append(MAVEN_SRC_FILE.concat(SEPARATION)).append(projectMessage.getProjectPackage().replace(".", SEPARATION))
                     .append(SEPARATION).append(javaFileName);
             File classFile = new File(classPath.toString());
@@ -215,7 +227,32 @@ public class CodeFactory {
     }
 
     @SuppressWarnings("all")
-    private static List<String> getAllFile(String directoryPath, boolean isAddDirectory) {
+    private static List<String> getAllFile(URL url) throws IOException {
+        List<String> list = new ArrayList<>();
+        if (url.getProtocol().equals("file")){
+            String filePath = url.getPath();
+            List<String> allFile = getAllFile(filePath);
+            ArrayList<String> result = new ArrayList<>();
+            allFile.forEach(str->result.add(str.replace(filePath,"")));
+            return result;
+        }
+        String jarPath = url.toString().substring(0, url.toString().indexOf("!/") + 2);
+        URL jarURL = new URL(jarPath);
+        JarURLConnection jarURLConnection = (JarURLConnection) jarURL.openConnection();
+        JarFile jarFile = jarURLConnection.getJarFile();
+        Enumeration<JarEntry> jarEntrys = jarFile.entries();
+        String suffix = url.toString().substring(url.toString().lastIndexOf("!/")+2);
+        while (jarEntrys.hasMoreElements()) {
+            JarEntry entry = jarEntrys.nextElement();
+            String name = entry.getName();
+            if (name.startsWith(suffix)&&!entry.isDirectory()) {
+                list.add(entry.getName().replace(suffix,""));
+            }
+        }
+        return list;
+    }
+
+    private static List<String> getAllFile(String directoryPath) {
         List<String> list = new ArrayList<>();
         File baseFile = new File(directoryPath);
         if (baseFile.isFile() || !baseFile.exists()) {
@@ -224,12 +261,9 @@ public class CodeFactory {
         File[] files = baseFile.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                if (isAddDirectory) {
-                    list.add(file.getAbsolutePath());
-                }
-                list.addAll(getAllFile(file.getAbsolutePath(), isAddDirectory));
+                list.addAll(getAllFile(file.getAbsolutePath()));
             } else if (file.getPath().endsWith(FM_PERFIX)) {
-                list.add(file.getPath().replace("\\", SEPARATION));
+                list.add(SEPARATION.concat(file.getPath().replace("\\", SEPARATION)));
             }
         }
         return list;
