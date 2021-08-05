@@ -39,12 +39,6 @@ public class ProjectMessage {
      */
     private String suffix;
 
-    private boolean skipJdbc;
-
-    private boolean skipBase;
-
-    private boolean skipConfig;
-
     /**
      * 项目模块名
      */
@@ -72,29 +66,6 @@ public class ProjectMessage {
         return new ProjectMessageBuilder();
     }
 
-    public boolean isSkipConfig() {
-        return skipConfig;
-    }
-
-    public void setSkipConfig(boolean skipConfig) {
-        this.skipConfig = skipConfig;
-    }
-
-    public boolean isSkipBase() {
-        return skipBase;
-    }
-
-    public void setSkipBase(boolean skipBase) {
-        this.skipBase = skipBase;
-    }
-
-    public boolean isSkipJdbc() {
-        return skipJdbc;
-    }
-
-    public void setSkipJdbc(boolean skipJdbc) {
-        this.skipJdbc = skipJdbc;
-    }
 
 
     public static class ProjectMessageBuilder {
@@ -112,19 +83,6 @@ public class ProjectMessage {
             projectMessage.setOtherField(map);
             return this;
         }
-        public ProjectMessageBuilder skipJdbc(boolean skipJdbc){
-            projectMessage.setSkipJdbc(skipJdbc);
-            return this;
-        }
-        public ProjectMessageBuilder skipBase(boolean skipBase){
-            projectMessage.setSkipBase(skipBase);
-            return this;
-        }
-        public ProjectMessageBuilder skipConfig(boolean skipConfig){
-            projectMessage.setSkipConfig(skipConfig);
-            return this;
-        }
-
 
         public ProjectMessageBuilder driver(String driver){
             projectMessage.setDriver(driver);
@@ -171,7 +129,7 @@ public class ProjectMessage {
             if (StringUtils.isEmpty(projectMessage.getAuthor())) {
                 throw new IllegalArgumentException("请设置作者 Author");
             }
-            if (!(Boolean.getBoolean("skipJdbc")||projectMessage.isSkipJdbc())){
+            if (!Boolean.getBoolean("skipJdbc")){
                 if (StringUtils.isEmpty(projectMessage.getDriver())) {
                     throw new IllegalArgumentException("请设置数据库驱动 driver");
                 }

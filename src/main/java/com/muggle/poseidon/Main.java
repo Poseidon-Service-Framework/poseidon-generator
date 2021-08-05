@@ -15,7 +15,7 @@ public class Main {
                 .swagger(true).tableName(Arrays.asList("oa_url_info")).parentPack("com.muggle.base")
                 .jdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC")
                 .suffix("user").password("root").module("muggle-generator").projectPackage("com.muggle")
-                .otherField(otherfield).skipJdbc(false).skipBase(false).skipConfig(false).build();
+                .otherField(otherfield).build();
         CodeCommandInvoker invoker = new CodeCommandInvoker( new SimpleCodeGenerator(build));
 //        invoker.popCommond("createCode");
         invoker.execute();
