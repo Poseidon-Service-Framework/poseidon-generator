@@ -3,7 +3,10 @@ package com.muggle.poseidon.genera;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
+import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
 import com.muggle.poseidon.entity.ProjectMessage;
 
 /**
@@ -13,18 +16,13 @@ import com.muggle.poseidon.entity.ProjectMessage;
  * @create: 2019-12-05
  **/
 
-public abstract class CodeGenerator {
+public abstract class CodeGenerator extends AutoGenerator {
 
 
-    private  ProjectMessage message;
+    private  final ProjectMessage message;
 
-    private FreemarkerTemplateEngine freemarkerTemplateEngine;
-
-    public void init(ProjectMessage projectMessage){
-        this.message=projectMessage;
-    }
-
-    public CodeGenerator() {
+    public ProjectMessage getMessage() {
+        return message;
     }
 
     public CodeGenerator(ProjectMessage message) {
@@ -35,81 +33,76 @@ public abstract class CodeGenerator {
     /**
      * 数据库配置
      *
-     * @param dsc
      * @return
      */
-    abstract DataSourceConfig configDataSource(ProjectMessage dsc);
+    abstract  DataSourceConfig configDataSource();
 
     /**
      * 类属性配置
      *
-     * @param message 代码生成实体信息
      * @return
      */
-    abstract GlobalConfig configGlobal(ProjectMessage message);
+    abstract  GlobalConfig configGlobal();
 
     /**
      * 包属性配置
      *
-     * @param message
      * @return
      */
-    abstract PackageConfig configPc(ProjectMessage message);
+    abstract  PackageConfig configPc();
 
     /**
      * 文件属性配置
      *
-     * @param message
      * @return
      */
-    abstract InjectionConfig fileConfig(ProjectMessage message);
+    abstract  InjectionConfig fileConfig();
 
     /**
      * 代码模板配置
      *
-     * @param message
      * @return
      */
-    abstract TemplateConfig configTemp(ProjectMessage message);
+    abstract  TemplateConfig configTemp();
 
     /**
      * 父类相关配置
      *
-     * @param message
      * @return
      */
-    abstract StrategyConfig configStrategy(ProjectMessage message);
+    abstract  StrategyConfig  configStrategy();
 
     /**
-     * 实际执行生成代码的方法
+     * 代码生成步骤拆分
      */
-    public void createCode() {
-        AutoGenerator mpg = new AutoGenerator();
+    @Override
+    public void execute() {
         // 全局配置
-        DataSourceConfig dataSourceConfig = configDataSource(this.message);
-        GlobalConfig globalConfig = configGlobal(this.message);
-        PackageConfig packageConfig = configPc(this.message);
-        InjectionConfig config = fileConfig(this.message);
-        mpg.setPackageInfo(packageConfig);
-        mpg.setDataSource(dataSourceConfig);
-        mpg.setGlobalConfig(globalConfig);
-        mpg.setCfg(config);
-        TemplateConfig templateConfig = configTemp(this.message);
-        mpg.setTemplate(templateConfig);
-        StrategyConfig strategyConfig = configStrategy(message);
-        mpg.setStrategy(strategyConfig);
+        DataSourceConfig dataSourceConfig = configDataSource();
+        GlobalConfig globalConfig = configGlobal();
+        PackageConfig packageConfig = configPc();
+        InjectionConfig config = fileConfig();
+        this.setPackageInfo(packageConfig);
+        this.setDataSource(dataSourceConfig);
+        this.setGlobalConfig(globalConfig);
+        this.setCfg(config);
+        TemplateConfig templateConfig = configTemp();
+        this.setTemplate(templateConfig);
+        StrategyConfig strategyConfig = configStrategy();
+        this.setStrategy(strategyConfig);
         FreemarkerTemplateEngine freemarkerTemplateEngine = new FreemarkerTemplateEngine();
-        this.freemarkerTemplateEngine=freemarkerTemplateEngine;
-        mpg.setTemplateEngine(freemarkerTemplateEngine);
-        mpg.execute();
+        this.setTemplateEngine(freemarkerTemplateEngine);
+        if (null == this.config) {
+            this.config = new ConfigBuilder(getPackageInfo(), getDataSource(), getStrategy(), getTemplate(), getGlobalConfig());
+            if (null != this.injectionConfig) {
+                this.injectionConfig.setConfig(this.config);
+            }
+        }
+        getTemplateEngine().init(this.pretreatmentConfigBuilder(this.config));
     }
 
-
-    public FreemarkerTemplateEngine getFreemarkerTemplateEngine() {
-        return freemarkerTemplateEngine;
+    public void createCode(){
+        getTemplateEngine().mkdirs().batchOutput().open();
     }
 
-    public void setFreemarkerTemplateEngine(FreemarkerTemplateEngine freemarkerTemplateEngine) {
-        this.freemarkerTemplateEngine = freemarkerTemplateEngine;
-    }
 }

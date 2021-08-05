@@ -1,5 +1,7 @@
 package com.muggle.poseidon.factory;
 
+import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
+import com.baomidou.mybatisplus.generator.engine.AbstractTemplateEngine;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.muggle.poseidon.constant.GlobalConstant;
 import com.muggle.poseidon.entity.ProjectMessage;
@@ -33,19 +35,20 @@ public class CodeFactory {
 
 
     public static void init(CodeGenerator codeGenerator) {
+        codeGenerator.execute();
         CodeFactory.codeGenerator = codeGenerator;
     }
 
-    public static void createCode(ProjectMessage projectMessage) {
+    public static void createCode() {
         if (codeGenerator == null) {
             throw new IllegalArgumentException("代码生成器未初始化");
         }
-        codeGenerator.init(projectMessage);
         codeGenerator.createCode();
         LOGGER.info("生成生成 业务类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
     }
 
-    public static void createMainClass( ProjectMessage projectMessage) throws Exception {
+    public static void createMainClass( ) throws Exception {
+        ProjectMessage projectMessage = codeGenerator.getMessage();
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(GlobalConstant.SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
@@ -56,8 +59,14 @@ public class CodeFactory {
         String module = projectMessage.getModule();
         String className = underline2Camel(module, true);
         path.append(className).append("Application").append(".java");
-        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
+        AbstractTemplateEngine freemarkerTemplateEngine = codeGenerator.getTemplateEngine();
         projectMessage.getOtherField().put("className", className.concat("Application"));
+        File mainClass = new File(path.toString());
+        if (!mainClass.exists()) {
+            if (!mainClass.getParentFile().exists()) {
+                mainClass.getParentFile().mkdirs();
+            }
+        }
         freemarkerTemplateEngine.writer(converMessage(projectMessage),MAIN_CLASS,path.toString());
     }
 
@@ -73,7 +82,8 @@ public class CodeFactory {
         return map;
     }
 
-    public static void createConfig(ProjectMessage projectMessage) throws Exception {
+    public static void createConfig() throws Exception {
+        ProjectMessage projectMessage = codeGenerator.getMessage();
         String filePath = CodeGenerator.class.getClassLoader().getResource(GlobalConstant.OTHER).getFile();
         List<String> allFile = getAllFile(filePath, false);
         for (String templatePath : allFile) {
@@ -89,10 +99,11 @@ public class CodeFactory {
             if (!classFile.getParentFile().exists()) {
                 classFile.getParentFile().mkdirs();
             }
-            FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
+            AbstractTemplateEngine freemarkerTemplateEngine = codeGenerator.getTemplateEngine();
             String packageName = projectMessage.getProjectPackage().concat(".").concat(javaFileName.substring(0, javaFileName
                     .lastIndexOf('/')).replace("/", "."));
             projectMessage.getOtherField().put("packageName", packageName);
+
             freemarkerTemplateEngine.writer(converMessage(projectMessage),"/psf-others/".concat(javaFileName)
                     .concat(FM_PERFIX),classPath.toString());
             LOGGER.info("生成config类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
@@ -100,7 +111,8 @@ public class CodeFactory {
 
     }
 
-    public static void createBanner(ProjectMessage projectMessage) throws IOException {
+    public static void createBanner() throws IOException {
+        ProjectMessage projectMessage = codeGenerator.getMessage();
         File banner = new File(System.getProperty(USER_DIR) + SEPARATION + projectMessage.getModule() + MAVEN_RESOURECES_FILE + BANNER);
         if (!banner.exists()) {
             if (!banner.getParentFile().exists()) {
@@ -124,7 +136,8 @@ public class CodeFactory {
         }
     }
 
-    public static void createReadme(ProjectMessage projectMessage) throws IOException {
+    public static void createReadme() throws IOException {
+        ProjectMessage projectMessage = codeGenerator.getMessage();
         File readme = new File(System.getProperty(USER_DIR) + SEPARATION + projectMessage.getModule() + "/readme.md");
         if (!readme.exists()) {
             if (!readme.getParentFile().exists()) {
@@ -144,38 +157,59 @@ public class CodeFactory {
         }
     }
 
-    public static void createPom( ProjectMessage projectMessage) throws Exception {
-        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
+    public static void createPom( ) throws Exception {
+        ProjectMessage projectMessage = codeGenerator.getMessage();
+        AbstractTemplateEngine freemarkerTemplateEngine = codeGenerator.getTemplateEngine();
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(SEPARATION);
         }
         path.append("pom.xml");
+        File pom = new File(path.toString());
+        if (!pom.exists()) {
+            if (!pom.getParentFile().exists()) {
+                pom.getParentFile().mkdirs();
+            }
+        }
         freemarkerTemplateEngine.writer(converMessage(projectMessage),POM,path.toString());
         LOGGER.info("生成pom文件》》》》》》》》》》》》");
     }
 
-    public static void createProperties(String properties, ProjectMessage projectMessage) throws Exception {
-        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
+    public static void createProperties(String properties) throws Exception {
+        ProjectMessage projectMessage = codeGenerator.getMessage();
+        AbstractTemplateEngine freemarkerTemplateEngine = codeGenerator.getTemplateEngine();
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(SEPARATION);
         }
         path.append(MAVEN_RESOURECES_FILE).append(SEPARATION).append(properties).append(".properties");
+        File propertiesFile = new File(path.toString());
+        if (!propertiesFile.exists()) {
+            if (!propertiesFile.getParentFile().exists()) {
+                propertiesFile.getParentFile().mkdirs();
+            }
+        }
         freemarkerTemplateEngine.writer(converMessage(projectMessage),APPLICATION.replace("#",properties),path.toString());
         LOGGER.info("生成 properties 》》》》》》》》》》》》");
     }
 
-    public static void createLogback( ProjectMessage projectMessage) throws Exception {
-        FreemarkerTemplateEngine freemarkerTemplateEngine = codeGenerator.getFreemarkerTemplateEngine();
+    public static void createLogback( ) throws Exception {
+        ProjectMessage projectMessage = codeGenerator.getMessage();
+        AbstractTemplateEngine freemarkerTemplateEngine = codeGenerator.getTemplateEngine();
         StringBuilder path = new StringBuilder();
         path.append(System.getProperty(USER_DIR)).append(SEPARATION);
         if (!StringUtils.isEmpty(projectMessage.getModule())) {
             path.append(projectMessage.getModule()).append(SEPARATION);
         }
         path.append(MAVEN_RESOURECES_FILE).append(SEPARATION).append("logback-spring.xml");
+        File logback = new File(path.toString());
+        if (!logback.exists()) {
+            if (!logback.getParentFile().exists()) {
+                logback.getParentFile().mkdirs();
+            }
+        }
         freemarkerTemplateEngine.writer(converMessage(projectMessage),LOGBACK,path.toString());
         LOGGER.info("生成 logback.xml 》》》》》》》》》》》》");
     }

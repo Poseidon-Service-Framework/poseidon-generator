@@ -29,11 +29,10 @@ public class SimpleCodeGenerator extends CodeGenerator {
         LOGGER.info("==========> [启动代码模板生成器，注意如果数据库无该表则不生成对应的类]");
     }
 
-    public SimpleCodeGenerator() {
-    }
 
     @Override
-    DataSourceConfig configDataSource(ProjectMessage message) {
+    DataSourceConfig configDataSource() {
+        ProjectMessage message = getMessage();
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(message.getJdbcUrl());
         // dsc.setSchemaName("public");
@@ -45,8 +44,9 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    GlobalConfig configGlobal(ProjectMessage message) {
+    GlobalConfig configGlobal() {
         GlobalConfig gc = new GlobalConfig();
+        ProjectMessage message = getMessage();
         String projectPath = System.getProperty(GlobalConstant.USER_DIR);
         gc.setOutputDir(projectPath+GlobalConstant.SEPARATION+message.getModule()+ GlobalConstant.MAVEN_SRC_FILE);
         gc.setAuthor(message.getAuthor());
@@ -59,7 +59,8 @@ public class SimpleCodeGenerator extends CodeGenerator {
 
 
     @Override
-    PackageConfig configPc(ProjectMessage message) {
+    PackageConfig configPc() {
+        ProjectMessage message = getMessage();
         PackageConfig pc = new PackageConfig();
         pc.setModuleName(message.getSuffix());
         pc.setParent(message.getProjectPackage());
@@ -67,7 +68,8 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    InjectionConfig fileConfig(final ProjectMessage message) {
+    InjectionConfig fileConfig() {
+        ProjectMessage message = getMessage();
         InjectionConfig injectionConfig = new InjectionConfig() {
             @Override
             public void initMap() {
@@ -90,7 +92,8 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    TemplateConfig configTemp(ProjectMessage message) {
+    TemplateConfig configTemp() {
+        ProjectMessage message = getMessage();
         TemplateConfig templateConfig = new TemplateConfig();
 
         // 配置自定义输出模板
@@ -104,7 +107,8 @@ public class SimpleCodeGenerator extends CodeGenerator {
     }
 
     @Override
-    StrategyConfig configStrategy(ProjectMessage message) {
+    StrategyConfig configStrategy() {
+        ProjectMessage message = getMessage();
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);

@@ -2,8 +2,8 @@ package com.muggle.poseidon.factory;
 
 import com.muggle.poseidon.entity.CodeCommand;
 import com.muggle.poseidon.entity.ProjectMessage;
+import com.muggle.poseidon.genera.CodeGenerator;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -17,11 +17,19 @@ public class CodeCommandInvoker extends CodeFactory {
 
     private Queue<CodeCommand> commandQueue;
 
-    private final ProjectMessage projectMessage;
-
-    public CodeCommandInvoker(ProjectMessage projectMessage) {
+    public CodeCommandInvoker( CodeGenerator codeGenerator) {
         this.commandQueue= new LinkedList<>();
-        this.projectMessage=projectMessage;
+        init(codeGenerator);
+        commandQueue.add(new CodeCommand() {
+            @Override
+            public String getName() {
+                return "createCode";
+            }
+            @Override
+            public void excute() throws Exception {
+                createCode();
+            }
+        });
         commandQueue.add(new CodeCommand() {
             @Override
             public String getName() {
@@ -29,7 +37,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createPom(projectMessage);
+                createPom();
             }
         });
         commandQueue.add(new CodeCommand() {
@@ -39,7 +47,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createProperties("application",projectMessage);
+                createProperties("application");
             }
         });
         commandQueue.add(new CodeCommand() {
@@ -49,7 +57,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createProperties("bootstrap",projectMessage);
+                createProperties("bootstrap");
             }
         });
         commandQueue.add(new CodeCommand() {
@@ -59,17 +67,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createBanner(projectMessage);
-            }
-        });
-        commandQueue.add(new CodeCommand() {
-            @Override
-            public String getName() {
-                return "createCode";
-            }
-            @Override
-            public void excute() throws Exception {
-                createCode(projectMessage);
+                createBanner();
             }
         });
         commandQueue.add(new CodeCommand() {
@@ -79,7 +77,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createConfig(projectMessage);
+                createConfig();
             }
         });
         commandQueue.add(new CodeCommand() {
@@ -89,7 +87,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createLogback(projectMessage);
+                createLogback();
             }
         });
         commandQueue.add(new CodeCommand() {
@@ -99,7 +97,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createMainClass(projectMessage);
+                createMainClass();
             }
         });
         commandQueue.add(new CodeCommand() {
@@ -109,7 +107,7 @@ public class CodeCommandInvoker extends CodeFactory {
             }
             @Override
             public void excute() throws Exception {
-                createReadme(projectMessage);
+                createReadme();
             }
         });
 

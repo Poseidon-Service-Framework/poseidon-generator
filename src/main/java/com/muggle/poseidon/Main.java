@@ -1,7 +1,7 @@
 package com.muggle.poseidon;
 
 import com.muggle.poseidon.entity.ProjectMessage;
-import com.muggle.poseidon.factory.PoseidonCodeFactory;
+import com.muggle.poseidon.factory.CodeCommandInvoker;
 import com.muggle.poseidon.genera.SimpleCodeGenerator;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,7 +16,8 @@ public class Main {
                 .jdbcUrl("jdbc:mysql:///p_oa?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC")
                 .suffix("user").password("root").module("muggle-generator").projectPackage("com.muggle")
                 .otherField(otherfield).skipJdbc(false).skipBase(false).skipConfig(false).build();
-        PoseidonCodeFactory.init(new SimpleCodeGenerator());
-        PoseidonCodeFactory.createProject(build);
+        CodeCommandInvoker invoker = new CodeCommandInvoker( new SimpleCodeGenerator(build));
+//        invoker.popCommond("createCode");
+        invoker.execute();
     }
 }
