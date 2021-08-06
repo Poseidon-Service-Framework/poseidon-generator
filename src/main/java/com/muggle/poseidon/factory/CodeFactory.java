@@ -311,4 +311,7 @@ public class CodeFactory {
         }
         return str;
     }
+    public static CodeGenerator getCodeGenerator(){
+        return codeGenerator;
+    }
 }

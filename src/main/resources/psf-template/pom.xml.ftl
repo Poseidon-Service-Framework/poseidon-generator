@@ -7,6 +7,7 @@
     <groupId>${projectPackage}</groupId>
     <artifactId>${module}</artifactId>
     <version>${otherField.parentVersion}</version>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
