@@ -118,8 +118,8 @@ public class CodeFactory {
 
             freemarkerTemplateEngine.writer(converMessage(projectMessage),"/psf-others/".concat(javaFileName)
                     .concat(FM_PERFIX),classPath.toString());
-            LOGGER.info("生成config类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         }
+        LOGGER.info("生成config类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
 
     }
 

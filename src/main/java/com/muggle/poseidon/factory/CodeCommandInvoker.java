@@ -3,6 +3,8 @@ package com.muggle.poseidon.factory;
 import com.muggle.poseidon.entity.CodeCommand;
 import com.muggle.poseidon.entity.ProjectMessage;
 import com.muggle.poseidon.genera.CodeGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,6 +16,7 @@ import java.util.Queue;
  * Created by muggle
  */
 public class CodeCommandInvoker extends CodeFactory {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeCommandInvoker.class);
 
     private Queue<CodeCommand> commandQueue;
 
@@ -121,7 +124,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 e.printStackTrace();
             }
         });
-
+        LOGGER.info("==========> [代码生成完毕]");
     }
 
     public void addCommond(CodeCommand codeCommand){
