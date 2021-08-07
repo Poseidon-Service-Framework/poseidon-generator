@@ -4,6 +4,8 @@ poseidon.auto=false
 spring.flyway.locations=classpath:sql
 spring.flyway.enabled=false
 spring.application.name=${module}
+spring.profiles.active=local
+
 
 mybatis-plus.mapper-locations=classpath*:mapper/**/*.xml
 mybatis-plus.type-aliases-package=${projectPackage}.${suffix}.entity

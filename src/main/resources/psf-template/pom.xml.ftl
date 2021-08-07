@@ -25,10 +25,10 @@
              <groupId>org.aspectj</groupId>
              <artifactId>aspectjweaver</artifactId>
          </dependency>
-         <dependency>
+       <#--  <dependency>
              <groupId>org.springframework.boot</groupId>
              <artifactId>spring-boot-starter-security</artifactId>
-         </dependency>
+         </dependency>-->
          <dependency>
              <groupId>org.springframework.boot</groupId>
              <artifactId>spring-boot-starter</artifactId>
@@ -62,11 +62,6 @@
          <dependency>
              <groupId>org.springframework.boot</groupId>
              <artifactId>spring-boot-starter-web</artifactId>
-         </dependency>
-         <dependency>
-             <groupId>com.alibaba</groupId>
-             <artifactId>ding-sdk</artifactId>
-             <version>1.0.0.RELEASE</version>
          </dependency>
          <dependency>
              <groupId>org.projectlombok</groupId>

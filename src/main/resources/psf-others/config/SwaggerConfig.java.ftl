@@ -19,7 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 * @create: 2019-12-06
 **/
 
-@Profile({"dev"})
+@Profile({"dev","local"})
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
