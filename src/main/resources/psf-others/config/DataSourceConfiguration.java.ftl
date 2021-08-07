@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @MapperScan(basePackages = "${projectPackage}.${suffix}.mapper")
-public class DataSourceConfiguration
+public class DataSourceConfiguration{
     private static final Logger LOGGER = LoggerFactory.getLogger(DataSourceConfiguration.class);
 
     @Value("${'$'}{spring.datasource.driver-class-name}")

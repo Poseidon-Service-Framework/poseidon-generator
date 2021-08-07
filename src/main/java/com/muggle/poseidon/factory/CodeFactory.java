@@ -56,7 +56,7 @@ public class CodeFactory {
             throw new IllegalArgumentException("代码生成器未初始化");
         }
         codeGenerator.createCode();
-        LOGGER.info("生成生成 业务类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
+        LOGGER.info("生成 业务类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
     }
 
     public static void createMainClass( ) throws Exception {
@@ -80,6 +80,7 @@ public class CodeFactory {
             }
         }
         freemarkerTemplateEngine.writer(converMessage(projectMessage),MAIN_CLASS,path.toString());
+        LOGGER.info("生成 启动类》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
     }
 
     private static Map<String, Object> converMessage(ProjectMessage projectMessage) throws IllegalAccessException {
@@ -166,8 +167,9 @@ public class CodeFactory {
                         "\n";
                 fileOutputStream.write(logo.getBytes());
             }
+            LOGGER.info("生成readme 》》》》》》》》》》》》》》》》》》》》》》》》》》》》");
         }
-    }
+}
 
     public static void createPom( ) throws Exception {
         ProjectMessage projectMessage = codeGenerator.getMessage();
