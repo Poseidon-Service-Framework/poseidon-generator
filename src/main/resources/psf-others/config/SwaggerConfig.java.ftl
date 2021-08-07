@@ -34,7 +34,7 @@ public class SwaggerConfig {
         .build().apiInfo(new ApiInfoBuilder()
         .title("${module} api")
         .description("请填写描述信息")
-        .version("0.0.1.BUILD")
+        .version("${otherField.parentVersion?default('1.0-SNAPSHOT')}")
         .contact(new Contact("test","test","test@outlook.com"))
         .license("The Apache License")
         .licenseUrl("http://www.baidu.com")
