@@ -68,3 +68,36 @@ poseidon generator 中的模板
 ## 自定义指令
 
 实现 'codeCommand' 方法，并 调用 CodeCommandInvoker#addCommond 方法将指令加入队列中。
+
+通过指令你可以实现代码创建过程中自定义的逻辑。
+
+## qa
+问题一：代码生成工具直接依赖在项目中会不会造成代码的隐患，
+
+答：处理得当不会，比如该工具在生成的pom文件中配置如下：
+
+```xml
+ <profiles>
+        <profile>
+            <id>local</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.muggle</groupId>
+                    <artifactId>poseidon-generator</artifactId>
+                    <version>1.0.4-release</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>normal</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+```
+编译的profile不是 local就不会把poseidon-generator 依赖编进项目的jar包中，相当于没有依赖 poseidon-generator ，因此不造成安全隐患
+
+问题二：有没有可视化界面
+
+答：有，参看 https://github.com/Poseidon-Service-Framework/poseidon-generator-ui。
