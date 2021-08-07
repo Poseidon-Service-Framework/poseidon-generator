@@ -64,3 +64,7 @@ public class Main {
 两个文件夹中的模板进行修改，而 controller ，service 等模板需要你自己创建 文件夹 resources\templates，
 并在其中创建 mapper.xml.ftl 等类似文件以覆盖 mybati plus generator 中的模板，当然你也可以 以同样的方式覆盖
 poseidon generator 中的模板
+
+## 自定义指令
+
+实现 'codeCommand' 方法，并 调用 CodeCommandInvoker#addCommond 方法将指令加入队列中。
