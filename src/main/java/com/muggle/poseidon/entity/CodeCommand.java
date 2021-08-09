@@ -1,5 +1,7 @@
 package com.muggle.poseidon.entity;
 
+import com.muggle.poseidon.genera.CodeGenerator;
+
 /**
  * Description
  * Date 2021/8/5
@@ -8,5 +10,5 @@ package com.muggle.poseidon.entity;
 public interface CodeCommand {
     String getName();
 
-    void excute() throws Exception;
+    void excute(CodeGenerator codeGenerator) throws Exception;
 }

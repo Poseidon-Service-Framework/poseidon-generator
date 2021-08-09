@@ -29,7 +29,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createCode";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createCode();
             }
         });
@@ -39,7 +39,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createPom";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createPom();
             }
         });
@@ -49,7 +49,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createApplication";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createProperties("application");
             }
         });
@@ -59,7 +59,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createBootstrap";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createProperties("bootstrap");
             }
         });
@@ -69,7 +69,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createBanner";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createBanner();
             }
         });
@@ -79,7 +79,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createConfig";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createConfig();
             }
         });
@@ -89,7 +89,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createLogback";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createLogback();
             }
         });
@@ -99,7 +99,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createMainClass";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createMainClass();
             }
         });
@@ -109,7 +109,7 @@ public class CodeCommandInvoker extends CodeFactory {
                 return "createReadme";
             }
             @Override
-            public void excute() throws Exception {
+            public void excute(CodeGenerator codeGenerator) throws Exception {
                 createReadme();
             }
         });
@@ -119,7 +119,7 @@ public class CodeCommandInvoker extends CodeFactory {
     public void execute(){
         commandQueue.forEach(codeCommand -> {
             try {
-                codeCommand.excute();
+                codeCommand.excute(getCodeGenerator());
             } catch (Exception e) {
                 e.printStackTrace();
             }
