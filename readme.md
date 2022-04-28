@@ -64,7 +64,8 @@ public class Main {
 两个文件夹中的模板进行修改，而 controller ，service 等模板需要你自己创建文件夹 resources\templates,在其下添加对应的模板。
 模板名称和内容参考 mybatis-plus-generator源码中的templates。
 在其中创建 mapper.xml.ftl 等类似文件以覆盖 mybatisplus generator 中的模板，当然你也可以以同样的方式覆盖，poseidon generator 中的模板。
-
+你还可以在 psf-others文件夹下根据自己的包名创建文件夹添加模板文件，程序会根据你创建的文件夹以及模板在你的基础包下新建包和类。
+    
 ## 自定义指令
 
 实现 'codeCommand' 方法，并 调用 CodeCommandInvoker#addCommond 方法将指令加入队列中。
@@ -119,6 +120,7 @@ public class MyUIcodeCommand implements CodeCommand {
     }
 }
 ```
+
 
 该代码定义了一个 `createUIpom` 指令，会读取`/psf-extend/pom.xml.ftl` 下的模板创建pom。
 
