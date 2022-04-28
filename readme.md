@@ -15,8 +15,8 @@ mvn install
 ```shell script
 <dependency>
     <groupId>com.muggle</groupId>
-    <artifactId>poseidon-generator-ui</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>poseidon-generator</artifactId>
+    <version>1.0.4-release</version>
 </dependency>
 ```
 
@@ -61,15 +61,66 @@ public class Main {
 
 每个人对代码生成的需求不同，如果该工具默认生成的代码不能满足你的需求，那么你可以尝试自己修改代码模板，
 来满足你的需求，你可以直接在源码中找 `resources\psf-others\config` , `resources\psf-template` 
-两个文件夹中的模板进行修改，而 controller ，service 等模板需要你自己创建 文件夹 resources\templates，
-并在其中创建 mapper.xml.ftl 等类似文件以覆盖 mybati plus generator 中的模板，当然你也可以 以同样的方式覆盖
-poseidon generator 中的模板
+两个文件夹中的模板进行修改，而 controller ，service 等模板需要你自己创建文件夹 resources\templates,在其下添加对应的模板。
+模板名称和内容参考 mybatis-plus-generator源码中的templates。
+在其中创建 mapper.xml.ftl 等类似文件以覆盖 mybatisplus generator 中的模板，当然你也可以以同样的方式覆盖，poseidon generator 中的模板。
 
 ## 自定义指令
 
 实现 'codeCommand' 方法，并 调用 CodeCommandInvoker#addCommond 方法将指令加入队列中。
 
 通过指令你可以实现代码创建过程中自定义的逻辑。
+
+示例：
+
+```java
+
+public class MyUIcodeCommand implements CodeCommand {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyUIcodeCommand.class);
+
+    @Override
+    public String getName() {
+        return "createUIpom";
+    }
+
+    @Override
+    public void excute(CodeGenerator codeGenerator) throws Exception {
+        final AbstractTemplateEngine templateEngine =codeGenerator.getTemplateEngine();
+        ProjectMessage projectMessage =  codeGenerator.getMessage();
+        StringBuilder path = new StringBuilder();
+        path.append(System.getProperty("user.dir")).append("/");
+        if (!StringUtils.isEmpty(projectMessage.getModule())) {
+            path.append(projectMessage.getModule()).append("/");
+        }
+
+        path.append("pom.xml");
+        File pom = new File(path.toString());
+        if (!pom.exists() && !pom.getParentFile().exists()) {
+            pom.getParentFile().mkdirs();
+        }
+        templateEngine.writer(converMessage(projectMessage), "/psf-extend/pom.xml.ftl", path.toString());
+        LOGGER.info("==========> [生成 pom 文件]");
+    }
+    private static Map<String, Object> converMessage(ProjectMessage projectMessage) throws IllegalAccessException {
+        Map<String, Object> map = new HashMap();
+        Class<?> clazz = projectMessage.getClass();
+        Field[] var3 = clazz.getDeclaredFields();
+        int var4 = var3.length;
+
+        for(int var5 = 0; var5 < var4; ++var5) {
+            Field field = var3[var5];
+            field.setAccessible(true);
+            String fieldName = field.getName();
+            Object value = field.get(projectMessage);
+            map.put(fieldName, value);
+        }
+
+        return map;
+    }
+}
+```
+
+该代码定义了一个 `createUIpom` 指令，会读取`/psf-extend/pom.xml.ftl` 下的模板创建pom。
 
 ## qa
 问题一：代码生成工具直接依赖在项目中会不会造成代码的隐患，
